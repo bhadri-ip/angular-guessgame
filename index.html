@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="GuessAWord">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess A Word</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> 
+    <script src="app.js"> </script>
+    <script src="controllers/gameController.js"> </script> 
+    <style>
+        .f-s-20 {
+            font-size: 20px;
+        }
+        .fl-l {
+            float: left;
+        }
+        .m-l-10 {
+            margin-left: 10px;
+        }
+        .m-t-10 {
+            margin-top: 10px;
+        }
+        .m-t-15 {
+            margin-top: 15px;
+        }
+        .f-c-g {
+            color: green;
+        }
+        .f-c-r {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-top: 20px;">
+       <div ng-controller="gameController" class="container">
+           <strong class="f-s-20">  INSTRUCTIONS </strong>
+            <p> 1. NO OF CHANCES DEPENDS ON THE LENGTH OF THE WORD </p>    
+            <p> 2. ENTER ONLY LOWERCASE </p>    
+            <!-- <p> 3. GET THE CLUE ENTERING : '!' </p>    
+            <p> 4. U CAN GUESS THE WHOLE WORD ENTERING:'%' </p>    
+            <p> 5. U CAN QUIT THE GAME ANYTIME ENTERING : '*' </p> -->
+        <div ng-hide="isGameStarted">
+           <div>
+                <p class="fl-l">Please enter your name : </p>
+                <p><input class="m-l-10" type="text" ng-model="firstName" maxlength="50"></p>
+                <p>SELECT YOUR MODE OF PLAYING : <span class="f-s-20" style=" color: green;
+                font-style: bold;"> {{firstName}} </span> </p>    
+                <label>
+                    <input type="radio" ng-model="mode" value="easy">
+                    EASY
+                </label><br/>
+                <label>
+                    <input type="radio" ng-model="mode" value="medium">
+                    MODERATE
+                </label><br/>
+                <label>
+                    <input type="radio" ng-model="mode" value="hard">
+                    DIFFICULT
+                </label><br/>
+            </div>
+            <button type="button" class="btn btn-success" ng-disabled="isGameStarted" ng-click="startGame()"> Start Game </button>
+        </div>
+        <div ng-show="questionData && !gameOver">
+            <p>Game Starts</p>
+            <div>
+                <label>
+                    <input type="radio" ng-model="inputMode" value="letter">
+                    Enter letter-by-letter
+                </label><br/>
+                <label>
+                    <input type="radio" ng-model="inputMode" value="word">
+                    Enter Whole answer
+                </label><br/>
+            </div>
+            <!-- <strong> Guess a letter in the word </strong> -->
+            
+            <div>
+
+            </div>
+            <span> Your answer : </span><input type="text" ng-model="userGuess" ng-change="answerChanged()"><br/>
+            <div ng-show="inputMode === 'letter' || showHintClicked === true">
+                 <strong style="font-size: 30px;
+                 margin-left: 20px;" ng-repeat="letter in lettersMatched track by $index"> {{letter}} </strong> 
+                 <span ng-show="inputMode === 'letter'">
+                    <!-- <p> Total turns : {{totalChances}} </p> -->
+                    <p> Chances you have : {{totalChances - takenTurns}} </p>
+                 </span>
+            </div>
+            <div class="m-t-10" ng-if="questionData">
+                <p>  The length of the word is : {{answer.length}} </p>
+                <p> <span style="color: blue;">Hint :</span> {{hint}} </p>
+            </div>
+            <div class="m-t-15">
+                <button type="button" class="btn btn-info" ng-click="showMoreHint()"> Show more hint </button>
+                <button type="button" class="btn btn-success" ng-show="inputMode === 'word'" ng-click="checkAnswer()"> Submit </button> 
+            </div>
+            <br>
+            <br>
+            <button type="button" class="btn btn-warning" ng-click="showAnswer()"> Show Answer </button>
+        </div>
+        
+        <div ng-show="gameOver"> 
+            <p class="f-c-g f-s-20" ng-if="winMessage !== ''">{{winMessage}}</p>
+            <p class="f-c-g f-s-20" ng-if="scoreMessage !== ''"> {{scoreMessage}}</p>
+            <p class="f-c-r f-s-20" ng-if="looseMessage !== ''">{{looseMessage}}</p>
+            <p class="f-c-g f-s-20" ng-if="corectAnswer !== ''">{{corectAnswer}}</p>
+            <button type="button" class="btn btn-primary" ng-click="resetVariables()"> Play Again </button>
+        </div>
+       </div>
+    </div>
+</body>
+</html>
